@@ -1,0 +1,5 @@
+Tests\ChangeUserTest.class
+Tests\AuthorizationTest.class
+Tests\ResponseOrderTest.class
+Tests\CreateOrderTest.class
+Tests\CreateUserTest.class
