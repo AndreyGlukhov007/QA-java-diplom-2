@@ -1,6 +1,7 @@
 POJO\CreateUser\CreateUserDeserializationPOJO\CreateUserDeserializationPOJO.class
-POJO\CreateUser\CreateUserSerializationPOJO\CreateUserSerializationPOJO.class
 POJO\CreateUser\CreateUserDeserializationPOJO\User.class
+POJO\CreateUser\CreateUserSerializationPOJO\CreateUserSerializationPOJO.class
+Tests\MainTest.class
 POJO\Authorization\RequestAuthorizationPOJO.class
 POJO\ChangeUser\ChangeUserDeserializationPOJO.class
 POJO\CreateUser\CreateUserDeserializationPOJO\UserCreateRegisteredPOJO.class
