@@ -7,27 +7,17 @@ import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CreateUserTest {
+public class CreateUserTest extends MainTest{
 
-    //Этот метод нужен чтобы создавать уникальных пользователей. К логину и имени добавляется актуальная дата и время (часы, минуты, секунды).
-    public static String getCurrentDateTime() {
-        // Получаем текущие дату и время
-        LocalDateTime now = LocalDateTime.now();
-
-        // Форматируем вывод
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
-
-        // Возвращаем отформатированную строку
-        return now.format(formatter);
-    }
+    private CreateUserDeserializationPOJO response;
+    private String emailTest = getEmailTest();
+    private String nameTest = getNameTest();
 
     @BeforeEach
     public void setUp(){
@@ -38,21 +28,8 @@ public class CreateUserTest {
     @Test
     public void createUniqueUser() throws InterruptedException {
 
-        String emailTest = "test"+getCurrentDateTime()+"@mail.ru";
-        String nameTest = "name " + getCurrentDateTime();
-
-        CreateUserSerializationPOJO createUserPOJO= new CreateUserSerializationPOJO(emailTest, "qwerty", nameTest);
-        CreateUserDeserializationPOJO response = RestAssured
-                .given()
-                    .header("Content-type", "application/json")
-                    .and()
-                    .body(createUserPOJO)
-                .when()
-                    .post("api/auth/register")
-                .then()
-                    .statusCode(200) // Проверка кода ответа
-                    .extract()
-                    .as(CreateUserDeserializationPOJO.class);
+        // Cоздаём пользователя
+        response = createUser(emailTest,"qwerty", nameTest);
 
         assertEquals(response.isSuccess(), true); // Проверяем что в ответе приходит значение true
         assertEquals(emailTest, response.getUser().getEmail()); // Проверяем что в ответе приходит тот e-mail который был указан при регистрации
@@ -71,7 +48,8 @@ public class CreateUserTest {
 
     // создать пользователя, который уже зарегистрирован;
     @Test
-    public void createRegisteredUser() throws InterruptedException {
+    public void createRegisteredUser(){
+
         CreateUserSerializationPOJO createUserPOJO= new CreateUserSerializationPOJO("Test@mail.ru", "qwerty", "Name " + getCurrentDateTime());
         UserCreateRegisteredPOJO userCreateRegisteredPOJO = RestAssured
                 .given()
@@ -91,7 +69,7 @@ public class CreateUserTest {
 
     // создать пользователя и не заполнить одно из обязательных полей (в данном случае не заполняется поле email);
     @Test
-    public void createUserNotEmail() throws InterruptedException {
+    public void createUserNotEmail(){
         CreateUserSerializationPOJO createUserPOJO= new CreateUserSerializationPOJO("", "qwerty", "Name " + getCurrentDateTime());
         UserCreateRegisteredPOJO userCreateRegisteredPOJO = RestAssured
                 .given()
@@ -111,7 +89,7 @@ public class CreateUserTest {
 
     // создать пользователя и не заполнить одно из обязательных полей (в данном случае не заполняется поле password);
     @Test
-    public void createUserNotPassword() throws InterruptedException {
+    public void createUserNotPassword(){
         CreateUserSerializationPOJO createUserPOJO= new CreateUserSerializationPOJO("Test"+getCurrentDateTime()+"@mail.ru", "", "Name " + getCurrentDateTime());
         UserCreateRegisteredPOJO userCreateRegisteredPOJO = RestAssured
                 .given()
@@ -131,7 +109,7 @@ public class CreateUserTest {
 
     // создать пользователя и не заполнить одно из обязательных полей (в данном случае не заполняется поле name);
     @Test
-    public void createUserNotName() throws InterruptedException {
+    public void createUserNotName(){
         CreateUserSerializationPOJO createUserPOJO= new CreateUserSerializationPOJO("Test"+getCurrentDateTime()+"@mail.ru", "qwerty", "");
         UserCreateRegisteredPOJO userCreateRegisteredPOJO = RestAssured
                 .given()
