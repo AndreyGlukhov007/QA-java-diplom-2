@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+// Строчка с изменениями 1 для того чтобы сделать Pull request
+
 public class AuthorizationTest extends MainTest{
 
     private CreateUserDeserializationPOJO responseСreateUserDeserializationPOJO;
