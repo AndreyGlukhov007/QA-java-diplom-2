@@ -1,5 +1,6 @@
 package Tests;
 
+import POJO.CreateOrder.CreateOrderDeserializationPOJO;
 import POJO.CreateUser.CreateUserDeserializationPOJO.CreateUserDeserializationPOJO;
 import POJO.CreateUser.CreateUserDeserializationPOJO.UserCreateRegisteredPOJO;
 import POJO.CreateUser.CreateUserSerializationPOJO.CreateUserSerializationPOJO;
@@ -51,11 +52,24 @@ public class CreateOrderTest extends MainTest{
         String token = responseСreateUserDeserializationPOJO.getAccessToken();
         String jwt = token.replaceFirst("^Bearer ", "");
 
+        // Получение данных об ингредиентах
+        CreateOrderDeserializationPOJO сreateOrderDeserializationPOJO =  RestAssured
+                .given()
+                .headers("Content-type", "application/json")
+                .body("")
+                .when()
+                .get("api/ingredients")
+                .as(CreateOrderDeserializationPOJO.class);
+
+        String Ingredient1 = сreateOrderDeserializationPOJO.getData().get(0).get_id();
+        String Ingredient2 = сreateOrderDeserializationPOJO.getData().get(1).get_id();
+
+        // Создание заказа
         Response response = RestAssured
                 .given()
                 .headers("Content-type", "application/json")
                 .auth().oauth2(jwt)
-                .body("{\"ingredients\": [\"61c0c5a71d1f82001bdaaa6d\",\"61c0c5a71d1f82001bdaaa6f\"]}")
+                .body("{\"ingredients\": [\"" + Ingredient1 + "\",\"" + Ingredient2 + "\"]}")
                 .when()
                 .post("api/orders");
 
